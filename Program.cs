@@ -13,6 +13,10 @@ namespace MyobPayroll
     {
         static void Main(string[] args)
         {
+            // Clear out payslips & employees.
+
+            Console.WriteLine("Welcome to Myob Payroll Program");
+
             var paySlips = GetPayslipsToProcess();
             if (paySlips.Any())
             {
@@ -22,6 +26,8 @@ namespace MyobPayroll
                     ExportPayslipsToCSV(GetListOfPaySlips(paySlipsProcessed));
                 }
             }
+
+            Console.Read();
         }
 
         private static List<int> ProcessPayslips(List<string> payslips)
@@ -75,17 +81,14 @@ namespace MyobPayroll
 
         }
 
-        private static void OuputPayslipsProcessed()
-        {
-
-        }
-
         private static void ExportPayslipsToCSV(List<PaySlip> paysliplist)
         {
-            string csvFile = @"C:\brendon\Myob\MyobPayroll\Output.csv";
+            string csvFile = Directory.GetCurrentDirectory() + @"\Output.csv"; ;
 
             if (File.Exists(csvFile))
             {
+                Console.WriteLine("Writing to: " + csvFile);
+
                 string payslipline = string.Empty;
                 List<string> fileContents = new List<string>(); 
 
@@ -99,6 +102,7 @@ namespace MyobPayroll
                                   payslip.SuperAmount.ToString();
 
                     fileContents.Add(payslipline);
+                    Console.WriteLine(payslipline);
                 }
 
                 File.WriteAllLines(csvFile, fileContents.ToArray());
@@ -107,12 +111,14 @@ namespace MyobPayroll
 
         private static List<string> GetPayslipsToProcess()
         {
-            string csvFile = @"C:\brendon\Myob\MyobPayroll\Input.csv";
+            string csvFile = Directory.GetCurrentDirectory() + @"\Input.csv";
             List<string> fileLines = new List<string>();
 
             if (File.Exists(csvFile))
             {
                 fileLines = File.ReadAllLines(csvFile).ToList();
+
+                Console.WriteLine("Reading from: " + csvFile);
 
                 foreach (var line in fileLines)
                 {

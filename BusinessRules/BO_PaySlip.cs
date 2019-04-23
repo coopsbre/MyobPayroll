@@ -38,6 +38,12 @@ namespace MyobPayroll.BusinessRules
             return paySlipCreated;
         }
 
+        internal void Delete()
+        {
+            DataLayer.DL_Payslip dL_Payslip = new DataLayer.DL_Payslip();
+            dL_Payslip.Delete();
+        }
+
         /// <summary>
         /// Method in charge of generating a payslip.
         /// </summary>
@@ -67,12 +73,12 @@ namespace MyobPayroll.BusinessRules
                 BO_MonthYear bo_monthYear = new BO_MonthYear();
                 MonthYear monthYear = bo_monthYear.GetMonthYear(payStartDate);
 
-                if (!HasBeenPaid(employee, monthYear))
-                {
+              //  if (!HasBeenPaid(employee, monthYear))
+             //   {
                     // 3) Create the Payslip.
                     this.CreatePaySlip(monthYear, employee, new BO_IncomeTax());
                     payGenerated = true;
-                }
+               // }
             }
 
             return payGenerated;

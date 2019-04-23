@@ -1,4 +1,6 @@
-﻿namespace MyobPayroll.BusinessRules
+﻿using System;
+
+namespace MyobPayroll.BusinessRules
 {
     public class BO_Employee
     {
@@ -13,6 +15,10 @@
             this.surname = surname;
             this.annualsalary = annualsalary;
             this.superperc = superperc / 100;
+        }
+
+        public BO_Employee()
+        {
         }
 
         public Employee GetEmployee(bool createauto=false)
@@ -36,6 +42,11 @@
             DataLayer.DL_Employee dl_Employee = new DataLayer.DL_Employee();
 
             return dl_Employee.Create(firstname, surname, annualsalary, superperc);
+        }
+
+        internal void Delete()
+        {
+            
         }
     }
 }

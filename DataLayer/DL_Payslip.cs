@@ -33,5 +33,10 @@ namespace MyobPayroll.DataLayer
 
             return paySlips;
         }
+
+        internal void Delete()
+        {
+            
+        }
     }
 }
