@@ -1,0 +1,428 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="MyobPayrollModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="CalendarMonth">
+          <Key>
+            <PropertyRef Name="MonthID" />
+          </Key>
+          <Property Name="MonthID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MonthName" Type="nvarchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CalendarYear">
+          <Key>
+            <PropertyRef Name="YearID" />
+          </Key>
+          <Property Name="YearID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="YearName" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Employee">
+          <Key>
+            <PropertyRef Name="EmployeeID" />
+          </Key>
+          <Property Name="EmployeeID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Firstname" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Surname" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="AnnualSalary" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="SuperPercent" Type="decimal" Precision="5" Scale="3" Nullable="false" />
+        </EntityType>
+        <EntityType Name="IncomeTaxRates">
+          <Key>
+            <PropertyRef Name="IncomeTaxRateID" />
+          </Key>
+          <Property Name="IncomeTaxRateID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IncomeYear" Type="int" Nullable="false" />
+          <Property Name="LowBand" Type="int" Nullable="false" />
+          <Property Name="HighBand" Type="int" />
+          <Property Name="IncomeTaxRuleId" Type="int" />
+        </EntityType>
+        <EntityType Name="IncomeTaxRule">
+          <Key>
+            <PropertyRef Name="IncomeTaxRuleID" />
+          </Key>
+          <Property Name="IncomeTaxRuleID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="StartAmount" Type="int" Nullable="false" />
+          <Property Name="SeedAmount" Type="decimal" Precision="5" Scale="3" Nullable="false" />
+          <Property Name="OverIncomeAmount" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="MonthYear">
+          <Key>
+            <PropertyRef Name="MonthYearID" />
+          </Key>
+          <Property Name="MonthYearID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MonthID" Type="int" Nullable="false" />
+          <Property Name="YearID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PaySlip">
+          <Key>
+            <PropertyRef Name="PaySlipID" />
+          </Key>
+          <Property Name="PaySlipID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="EmployeeID" Type="int" Nullable="false" />
+          <Property Name="MonthYearID" Type="int" Nullable="false" />
+          <Property Name="GrossIncome" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="IncomeTax" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="NetIncome" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="SuperAmount" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="GeneratedOn" Type="datetime" />
+        </EntityType>
+        <Association Name="FK_IncomeTaxRates_IncomeTaxRule">
+          <End Role="IncomeTaxRule" Type="Self.IncomeTaxRule" Multiplicity="0..1" />
+          <End Role="IncomeTaxRates" Type="Self.IncomeTaxRates" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="IncomeTaxRule">
+              <PropertyRef Name="IncomeTaxRuleID" />
+            </Principal>
+            <Dependent Role="IncomeTaxRates">
+              <PropertyRef Name="IncomeTaxRuleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MonthYear_CalendarMonth">
+          <End Role="CalendarMonth" Type="Self.CalendarMonth" Multiplicity="1" />
+          <End Role="MonthYear" Type="Self.MonthYear" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CalendarMonth">
+              <PropertyRef Name="MonthID" />
+            </Principal>
+            <Dependent Role="MonthYear">
+              <PropertyRef Name="MonthID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MonthYear_CalendarYear">
+          <End Role="CalendarYear" Type="Self.CalendarYear" Multiplicity="1" />
+          <End Role="MonthYear" Type="Self.MonthYear" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CalendarYear">
+              <PropertyRef Name="YearID" />
+            </Principal>
+            <Dependent Role="MonthYear">
+              <PropertyRef Name="YearID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PaySlip_Employee">
+          <End Role="Employee" Type="Self.Employee" Multiplicity="1" />
+          <End Role="PaySlip" Type="Self.PaySlip" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employee">
+              <PropertyRef Name="EmployeeID" />
+            </Principal>
+            <Dependent Role="PaySlip">
+              <PropertyRef Name="EmployeeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PaySlip_MonthYear">
+          <End Role="MonthYear" Type="Self.MonthYear" Multiplicity="1" />
+          <End Role="PaySlip" Type="Self.PaySlip" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MonthYear">
+              <PropertyRef Name="MonthYearID" />
+            </Principal>
+            <Dependent Role="PaySlip">
+              <PropertyRef Name="MonthYearID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="MyobPayrollModelStoreContainer">
+          <EntitySet Name="CalendarMonth" EntityType="Self.CalendarMonth" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CalendarYear" EntityType="Self.CalendarYear" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Employee" EntityType="Self.Employee" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="IncomeTaxRates" EntityType="Self.IncomeTaxRates" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="IncomeTaxRule" EntityType="Self.IncomeTaxRule" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MonthYear" EntityType="Self.MonthYear" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PaySlip" EntityType="Self.PaySlip" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_IncomeTaxRates_IncomeTaxRule" Association="Self.FK_IncomeTaxRates_IncomeTaxRule">
+            <End Role="IncomeTaxRule" EntitySet="IncomeTaxRule" />
+            <End Role="IncomeTaxRates" EntitySet="IncomeTaxRates" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MonthYear_CalendarMonth" Association="Self.FK_MonthYear_CalendarMonth">
+            <End Role="CalendarMonth" EntitySet="CalendarMonth" />
+            <End Role="MonthYear" EntitySet="MonthYear" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MonthYear_CalendarYear" Association="Self.FK_MonthYear_CalendarYear">
+            <End Role="CalendarYear" EntitySet="CalendarYear" />
+            <End Role="MonthYear" EntitySet="MonthYear" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PaySlip_Employee" Association="Self.FK_PaySlip_Employee">
+            <End Role="Employee" EntitySet="Employee" />
+            <End Role="PaySlip" EntitySet="PaySlip" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PaySlip_MonthYear" Association="Self.FK_PaySlip_MonthYear">
+            <End Role="MonthYear" EntitySet="MonthYear" />
+            <End Role="PaySlip" EntitySet="PaySlip" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="MyobPayrollModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="IncomeTaxRate">
+          <Key>
+            <PropertyRef Name="IncomeTaxRateID" />
+          </Key>
+          <Property Name="IncomeTaxRateID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IncomeYear" Type="Int32" Nullable="false" />
+          <Property Name="LowBand" Type="Int32" Nullable="false" />
+          <Property Name="HighBand" Type="Int32" />
+          <Property Name="IncomeTaxRuleId" Type="Int32" />
+          <NavigationProperty Name="IncomeTaxRule" Relationship="Self.FK_IncomeTaxRates_IncomeTaxRule" FromRole="IncomeTaxRates" ToRole="IncomeTaxRule" />
+        </EntityType>
+        <EntityType Name="IncomeTaxRule">
+          <Key>
+            <PropertyRef Name="IncomeTaxRuleID" />
+          </Key>
+          <Property Name="IncomeTaxRuleID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="StartAmount" Type="Int32" Nullable="false" />
+          <Property Name="SeedAmount" Type="Decimal" Precision="5" Scale="3" Nullable="false" />
+          <Property Name="OverIncomeAmount" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="IncomeTaxRates" Relationship="Self.FK_IncomeTaxRates_IncomeTaxRule" FromRole="IncomeTaxRule" ToRole="IncomeTaxRates" />
+        </EntityType>
+        <Association Name="FK_IncomeTaxRates_IncomeTaxRule">
+          <End Role="IncomeTaxRule" Type="Self.IncomeTaxRule" Multiplicity="0..1" />
+          <End Role="IncomeTaxRates" Type="Self.IncomeTaxRate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="IncomeTaxRule">
+              <PropertyRef Name="IncomeTaxRuleID" />
+            </Principal>
+            <Dependent Role="IncomeTaxRates">
+              <PropertyRef Name="IncomeTaxRuleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="MyobPayrollEntitiesTwo" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="IncomeTaxRates" EntityType="Self.IncomeTaxRate" />
+          <EntitySet Name="IncomeTaxRules" EntityType="Self.IncomeTaxRule" />
+          <AssociationSet Name="FK_IncomeTaxRates_IncomeTaxRule" Association="Self.FK_IncomeTaxRates_IncomeTaxRule">
+            <End Role="IncomeTaxRule" EntitySet="IncomeTaxRules" />
+            <End Role="IncomeTaxRates" EntitySet="IncomeTaxRates" />
+          </AssociationSet>
+          <EntitySet Name="Employees" EntityType="MyobPayrollModel.Employee" />
+          <EntitySet Name="PaySlips" EntityType="MyobPayrollModel.PaySlip" />
+          <AssociationSet Name="FK_PaySlip_Employee" Association="MyobPayrollModel.FK_PaySlip_Employee">
+            <End Role="Employee" EntitySet="Employees" />
+            <End Role="PaySlip" EntitySet="PaySlips" />
+          </AssociationSet>
+          <EntitySet Name="MonthYears" EntityType="MyobPayrollModel.MonthYear" />
+          <AssociationSet Name="FK_PaySlip_MonthYear" Association="MyobPayrollModel.FK_PaySlip_MonthYear">
+            <End Role="MonthYear" EntitySet="MonthYears" />
+            <End Role="PaySlip" EntitySet="PaySlips" />
+          </AssociationSet>
+          <EntitySet Name="CalendarMonths" EntityType="MyobPayrollModel.CalendarMonth" />
+          <EntitySet Name="CalendarYears" EntityType="MyobPayrollModel.CalendarYear" />
+          <AssociationSet Name="FK_MonthYear_CalendarYear" Association="MyobPayrollModel.FK_MonthYear_CalendarYear">
+            <End Role="CalendarYear" EntitySet="CalendarYears" />
+            <End Role="MonthYear" EntitySet="MonthYears" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MonthYear_CalendarMonth" Association="MyobPayrollModel.FK_MonthYear_CalendarMonth">
+            <End Role="CalendarMonth" EntitySet="CalendarMonths" />
+            <End Role="MonthYear" EntitySet="MonthYears" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Employee">
+          <Key>
+            <PropertyRef Name="EmployeeID" />
+          </Key>
+          <Property Name="EmployeeID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Firstname" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Surname" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="AnnualSalary" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <NavigationProperty Name="PaySlips" Relationship="MyobPayrollModel.FK_PaySlip_Employee" FromRole="Employee" ToRole="PaySlip" />
+          <Property Name="SuperPercent" Type="Decimal" Precision="5" Scale="3" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PaySlip">
+          <Key>
+            <PropertyRef Name="PaySlipID" />
+          </Key>
+          <Property Name="PaySlipID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="EmployeeID" Type="Int32" Nullable="false" />
+          <Property Name="MonthYearID" Type="Int32" Nullable="false" />
+          <Property Name="GrossIncome" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <Property Name="IncomeTax" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <Property Name="NetIncome" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <Property Name="SuperAmount" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <NavigationProperty Name="Employee" Relationship="MyobPayrollModel.FK_PaySlip_Employee" FromRole="PaySlip" ToRole="Employee" />
+          <NavigationProperty Name="MonthYear" Relationship="MyobPayrollModel.FK_PaySlip_MonthYear" FromRole="PaySlip" ToRole="MonthYear" />
+          <Property Name="GeneratedOn" Type="DateTime" Precision="3" />
+        </EntityType>
+        <Association Name="FK_PaySlip_Employee">
+          <End Type="MyobPayrollModel.Employee" Role="Employee" Multiplicity="1" />
+          <End Type="MyobPayrollModel.PaySlip" Role="PaySlip" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employee">
+              <PropertyRef Name="EmployeeID" />
+            </Principal>
+            <Dependent Role="PaySlip">
+              <PropertyRef Name="EmployeeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="MonthYear">
+          <Key>
+            <PropertyRef Name="MonthYearID" />
+          </Key>
+          <Property Name="MonthYearID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MonthID" Type="Int32" Nullable="false" />
+          <Property Name="YearID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="PaySlips" Relationship="MyobPayrollModel.FK_PaySlip_MonthYear" FromRole="MonthYear" ToRole="PaySlip" />
+          <NavigationProperty Name="CalendarYear" Relationship="MyobPayrollModel.FK_MonthYear_CalendarYear" FromRole="MonthYear" ToRole="CalendarYear" />
+          <NavigationProperty Name="CalendarMonth" Relationship="MyobPayrollModel.FK_MonthYear_CalendarMonth" FromRole="MonthYear" ToRole="CalendarMonth" />
+        </EntityType>
+        <Association Name="FK_PaySlip_MonthYear">
+          <End Type="MyobPayrollModel.MonthYear" Role="MonthYear" Multiplicity="1" />
+          <End Type="MyobPayrollModel.PaySlip" Role="PaySlip" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MonthYear">
+              <PropertyRef Name="MonthYearID" />
+            </Principal>
+            <Dependent Role="PaySlip">
+              <PropertyRef Name="MonthYearID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="CalendarMonth">
+          <Key>
+            <PropertyRef Name="MonthID" />
+          </Key>
+          <Property Name="MonthID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MonthName" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="MonthYears" Relationship="MyobPayrollModel.FK_MonthYear_CalendarMonth" FromRole="CalendarMonth" ToRole="MonthYear" />
+        </EntityType>
+        <EntityType Name="CalendarYear">
+          <Key>
+            <PropertyRef Name="YearID" />
+          </Key>
+          <Property Name="YearID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="YearName" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="MonthYears" Relationship="MyobPayrollModel.FK_MonthYear_CalendarYear" FromRole="CalendarYear" ToRole="MonthYear" />
+        </EntityType>
+        <Association Name="FK_MonthYear_CalendarYear">
+          <End Type="MyobPayrollModel.CalendarYear" Role="CalendarYear" Multiplicity="1" />
+          <End Type="MyobPayrollModel.MonthYear" Role="MonthYear" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CalendarYear">
+              <PropertyRef Name="YearID" />
+            </Principal>
+            <Dependent Role="MonthYear">
+              <PropertyRef Name="YearID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MonthYear_CalendarMonth">
+          <End Type="MyobPayrollModel.CalendarMonth" Role="CalendarMonth" Multiplicity="1" />
+          <End Type="MyobPayrollModel.MonthYear" Role="MonthYear" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CalendarMonth">
+              <PropertyRef Name="MonthID" />
+            </Principal>
+            <Dependent Role="MonthYear">
+              <PropertyRef Name="MonthID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="MyobPayrollModelStoreContainer" CdmEntityContainer="MyobPayrollEntitiesTwo">
+          <EntitySetMapping Name="IncomeTaxRates">
+            <EntityTypeMapping TypeName="MyobPayrollModel.IncomeTaxRate">
+              <MappingFragment StoreEntitySet="IncomeTaxRates">
+                <ScalarProperty Name="IncomeTaxRateID" ColumnName="IncomeTaxRateID" />
+                <ScalarProperty Name="IncomeYear" ColumnName="IncomeYear" />
+                <ScalarProperty Name="LowBand" ColumnName="LowBand" />
+                <ScalarProperty Name="HighBand" ColumnName="HighBand" />
+                <ScalarProperty Name="IncomeTaxRuleId" ColumnName="IncomeTaxRuleId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="IncomeTaxRules">
+            <EntityTypeMapping TypeName="MyobPayrollModel.IncomeTaxRule">
+              <MappingFragment StoreEntitySet="IncomeTaxRule">
+                <ScalarProperty Name="IncomeTaxRuleID" ColumnName="IncomeTaxRuleID" />
+                <ScalarProperty Name="StartAmount" ColumnName="StartAmount" />
+                <ScalarProperty Name="SeedAmount" ColumnName="SeedAmount" />
+                <ScalarProperty Name="OverIncomeAmount" ColumnName="OverIncomeAmount" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Employees">
+            <EntityTypeMapping TypeName="MyobPayrollModel.Employee">
+              <MappingFragment StoreEntitySet="Employee">
+                <ScalarProperty Name="SuperPercent" ColumnName="SuperPercent" />
+                <ScalarProperty Name="AnnualSalary" ColumnName="AnnualSalary" />
+                <ScalarProperty Name="Surname" ColumnName="Surname" />
+                <ScalarProperty Name="Firstname" ColumnName="Firstname" />
+                <ScalarProperty Name="EmployeeID" ColumnName="EmployeeID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PaySlips">
+            <EntityTypeMapping TypeName="MyobPayrollModel.PaySlip">
+              <MappingFragment StoreEntitySet="PaySlip">
+                <ScalarProperty Name="GeneratedOn" ColumnName="GeneratedOn" />
+                <ScalarProperty Name="SuperAmount" ColumnName="SuperAmount" />
+                <ScalarProperty Name="NetIncome" ColumnName="NetIncome" />
+                <ScalarProperty Name="IncomeTax" ColumnName="IncomeTax" />
+                <ScalarProperty Name="GrossIncome" ColumnName="GrossIncome" />
+                <ScalarProperty Name="MonthYearID" ColumnName="MonthYearID" />
+                <ScalarProperty Name="EmployeeID" ColumnName="EmployeeID" />
+                <ScalarProperty Name="PaySlipID" ColumnName="PaySlipID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MonthYears">
+            <EntityTypeMapping TypeName="MyobPayrollModel.MonthYear">
+              <MappingFragment StoreEntitySet="MonthYear">
+                <ScalarProperty Name="YearID" ColumnName="YearID" />
+                <ScalarProperty Name="MonthID" ColumnName="MonthID" />
+                <ScalarProperty Name="MonthYearID" ColumnName="MonthYearID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CalendarMonths">
+            <EntityTypeMapping TypeName="MyobPayrollModel.CalendarMonth">
+              <MappingFragment StoreEntitySet="CalendarMonth">
+                <ScalarProperty Name="MonthName" ColumnName="MonthName" />
+                <ScalarProperty Name="MonthID" ColumnName="MonthID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CalendarYears">
+            <EntityTypeMapping TypeName="MyobPayrollModel.CalendarYear">
+              <MappingFragment StoreEntitySet="CalendarYear">
+                <ScalarProperty Name="YearName" ColumnName="YearName" />
+                <ScalarProperty Name="YearID" ColumnName="YearID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

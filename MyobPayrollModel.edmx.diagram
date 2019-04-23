@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="0306c4a03fdf4f60a87e6442b73b399a" Name="Diagram1">
+        <EntityTypeShape EntityType="MyobPayrollModel.IncomeTaxRate" Width="1.5" PointX="3" PointY="0.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="MyobPayrollModel.IncomeTaxRule" Width="1.5" PointX="0.75" PointY="1" IsExpanded="true" />
+        <AssociationConnector Association="MyobPayrollModel.FK_IncomeTaxRates_IncomeTaxRule" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="MyobPayrollModel.Employee" Width="1.5" PointX="6.25" PointY="0.875" />
+        <EntityTypeShape EntityType="MyobPayrollModel.PaySlip" Width="1.5" PointX="8.625" PointY="0.75" />
+        <AssociationConnector Association="MyobPayrollModel.FK_PaySlip_Employee" />
+        <EntityTypeShape EntityType="MyobPayrollModel.MonthYear" Width="1.5" PointX="11.5" PointY="0.75" />
+        <AssociationConnector Association="MyobPayrollModel.FK_PaySlip_MonthYear" />
+        <EntityTypeShape EntityType="MyobPayrollModel.CalendarMonth" Width="1.5" PointX="0.75" PointY="4.75" />
+        <EntityTypeShape EntityType="MyobPayrollModel.CalendarYear" Width="1.5" PointX="9.625" PointY="5" />
+        <AssociationConnector Association="MyobPayrollModel.FK_MonthYear_CalendarYear" />
+        <AssociationConnector Association="MyobPayrollModel.FK_MonthYear_CalendarMonth" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
