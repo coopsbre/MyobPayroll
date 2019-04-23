@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 namespace MyobPayroll.DataLayer
 {
@@ -6,12 +7,29 @@ namespace MyobPayroll.DataLayer
     {
         public Employee Get(string firstname, string surname)
         {
-            MyobPayrollEntitiesTwo container = new MyobPayrollEntitiesTwo();
+            Employee employee = null;
 
-            var employeeList = container.Employees.Where(x => x.Firstname.Trim().ToUpper() == firstname.Trim().ToUpper() &&
-                                                          x.Surname.Trim().ToUpper() == surname.Trim().ToUpper()).ToList();
+            try
+            {
+                Console.WriteLine("Gettting the entity");
 
-            return employeeList.FirstOrDefault();
+                MyobPayrollEntitiesTwo container = new MyobPayrollEntitiesTwo();
+
+                Console.WriteLine(container.Employees.Count().ToString());
+
+                var employeeList = container.Employees.Where(x => x.Firstname.Trim().ToUpper() == firstname.Trim().ToUpper() &&
+                                                              x.Surname.Trim().ToUpper() == surname.Trim().ToUpper()).ToList();
+
+                Console.WriteLine("Made it here");
+
+                employee = employeeList.FirstOrDefault();
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception.Message);
+            }
+
+            return employee;
         }
 
         internal Employee Create(string firstname, string surname, decimal annualSalary, decimal superperc)

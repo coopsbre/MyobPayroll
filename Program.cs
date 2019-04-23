@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MyobPayroll
 {
@@ -23,6 +21,7 @@ namespace MyobPayroll
                 var paySlipsProcessed = ProcessPayslips(paySlips);
                 if (paySlipsProcessed.Any())
                 {
+                    Console.WriteLine("Got to the right place");
                     ExportPayslipsToCSV(GetListOfPaySlips(paySlipsProcessed));
                 }
             }
@@ -46,6 +45,7 @@ namespace MyobPayroll
             decimal super = 0M;
             string stringMonthYear = string.Empty;
             DateTime payDate;
+
             
 
             foreach (var payslip in payslips)
@@ -64,7 +64,7 @@ namespace MyobPayroll
 
                 month = DateTime.ParseExact(monthString, "MMMM", CultureInfo.CurrentCulture).Month;
                 payDate = new DateTime(year, month, 01);
-
+                
                 if (bo_PaySlip.GeneratePay(firstname, surname, salary, super, payDate))
                 {
                     payslipIds.Add(bo_PaySlip.PaySlipID);
@@ -84,6 +84,8 @@ namespace MyobPayroll
         private static void ExportPayslipsToCSV(List<PaySlip> paysliplist)
         {
             string csvFile = Directory.GetCurrentDirectory() + @"\Output.csv"; ;
+
+            Console.WriteLine("Writing to: " + csvFile);
 
             if (File.Exists(csvFile))
             {
@@ -114,6 +116,8 @@ namespace MyobPayroll
             string csvFile = Directory.GetCurrentDirectory() + @"\Input.csv";
             List<string> fileLines = new List<string>();
 
+            Console.WriteLine(csvFile);
+
             if (File.Exists(csvFile))
             {
                 fileLines = File.ReadAllLines(csvFile).ToList();
@@ -124,6 +128,10 @@ namespace MyobPayroll
                 {
                     Console.WriteLine(line);
                 }
+            }
+            else
+            {
+                Environment.Exit(0);
             }
 
             return fileLines;

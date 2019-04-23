@@ -56,11 +56,12 @@ namespace MyobPayroll.BusinessRules
         public bool GeneratePay(string firstname, string surname, decimal annualsalary, decimal super, DateTime payStartDate)
         {
             bool payGenerated = false;
-
+            
             if (IsValidPayParameters(annualsalary,super))
             {
                 // 1) Get the employee Id from the database.
                 BO_Employee bo_Employee = new BO_Employee(firstname, surname, annualsalary, super);
+                
                 Employee employee = bo_Employee.GetEmployee(createauto: true);
 
                 if (employee == null)

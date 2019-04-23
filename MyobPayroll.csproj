@@ -24,7 +24,7 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>19</ApplicationRevision>
+    <ApplicationRevision>26</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -190,6 +190,10 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>MyobPayrollModel.edmx</DependentUpon>
       <LastGenOutput>MyobPayrollModel.cs</LastGenOutput>
+    </Content>
+    <Content Include="MyobPayroll_log.ldf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <DependentUpon>MyobPayroll.mdf</DependentUpon>
     </Content>
   </ItemGroup>
   <ItemGroup>

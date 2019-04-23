@@ -23,15 +23,29 @@ namespace MyobPayroll.BusinessRules
 
         public Employee GetEmployee(bool createauto=false)
         {
-            Employee employee;
+            Employee employee = null;
 
-            DataLayer.DL_Employee dl_Employee = new DataLayer.DL_Employee();
-
-            employee = dl_Employee.Get(firstname, surname);
-
-            if (employee == null && createauto)
+            try
             {
-                employee = CreateEmployee();
+                DataLayer.DL_Employee dl_Employee = new DataLayer.DL_Employee();
+
+                Console.Write("About to get employee");
+                employee = dl_Employee.Get(firstname, surname);
+
+                if (employee == null && createauto)
+                {
+                    employee = CreateEmployee();
+                }
+                else
+                {
+                    Console.Write("About to write employee firstname");
+                    Console.Write(employee.Firstname);
+                }
+
+            }
+            catch(Exception exception)
+            {
+                Console.WriteLine(exception.Message);
             }
 
             return employee;
