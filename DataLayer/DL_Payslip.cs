@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace MyobPayroll.DataLayer
@@ -19,9 +20,18 @@ namespace MyobPayroll.DataLayer
             MyobPayrollEntitiesTwo container = new MyobPayrollEntitiesTwo();
 
             var paySlips = container.PaySlips.Where(x => x.EmployeeID == employeeID &&
-                                        x.MonthYearID == monthYearID);
+                                        x.MonthYearID == monthYearID).ToList();
 
             return paySlips.FirstOrDefault();
+        }
+
+        internal List<PaySlip> GetListOfPayslips(List<int> payslipIds)
+        {
+            MyobPayrollEntitiesTwo container = new MyobPayrollEntitiesTwo();
+
+            var paySlips = container.PaySlips.Where(x => payslipIds.Contains(x.PaySlipID)).ToList();
+
+            return paySlips;
         }
     }
 }

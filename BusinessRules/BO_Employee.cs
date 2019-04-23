@@ -4,13 +4,15 @@
     {
         private string firstname;
         private string surname;
-        private decimal annualsalary; 
+        private decimal annualsalary;
+        private decimal superperc;
 
-        public BO_Employee(string firstname, string surname, decimal annualsalary)
+        public BO_Employee(string firstname, string surname, decimal annualsalary, decimal superperc )
         {
             this.firstname = firstname;
             this.surname = surname;
             this.annualsalary = annualsalary;
+            this.superperc = superperc / 100;
         }
 
         public Employee GetEmployee(bool createauto=false)
@@ -23,7 +25,7 @@
 
             if (employee == null && createauto)
             {
-                CreateEmployee();
+                employee = CreateEmployee();
             }
 
             return employee;
@@ -33,7 +35,7 @@
         {
             DataLayer.DL_Employee dl_Employee = new DataLayer.DL_Employee();
 
-            return dl_Employee.Create(firstname, surname, annualsalary);
+            return dl_Employee.Create(firstname, surname, annualsalary, superperc);
         }
     }
 }

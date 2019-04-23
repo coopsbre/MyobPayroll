@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace MyobPayroll.BusinessRules
 {
     public class BO_PaySlip
     {
        
+        public int PaySlipID { get; set; }
+
         /// <summary>
         /// Purpose:- Create a payslip for an employee for a particular date.
         /// </summary>
@@ -13,12 +16,11 @@ namespace MyobPayroll.BusinessRules
         public bool CreatePaySlip(MonthYear monthYear, Employee employee, BO_IncomeTax bo_IncomeTax)
         {
             DataLayer.DL_Payslip dL_Payslip = new DataLayer.DL_Payslip();
+            bool paySlipCreated = false; 
 
             var incomeTax = bo_IncomeTax.CalcuateIncomeTax(monthYear.CalendarYear.YearName, employee.AnnualSalary);
             var grossIncome = decimal.Round(employee.AnnualSalary / 12, MidpointRounding.AwayFromZero);
-            
-            // Create a new payslip.
-            return dL_Payslip.Create(new PaySlip()
+            var paySlip = new PaySlip()
             {
                 EmployeeID = employee.EmployeeID,
                 MonthYearID = monthYear.MonthYearID,
@@ -27,7 +29,13 @@ namespace MyobPayroll.BusinessRules
                 NetIncome = grossIncome - incomeTax,
                 SuperAmount = decimal.Round((grossIncome) * employee.SuperPercent,MidpointRounding.AwayFromZero),
                 GeneratedOn = DateTime.Now.ToLocalTime()
-            });
+            };
+
+            paySlipCreated = dL_Payslip.Create(paySlip);
+
+            PaySlipID = paySlip.PaySlipID;
+
+            return paySlipCreated;
         }
 
         /// <summary>
@@ -39,14 +47,20 @@ namespace MyobPayroll.BusinessRules
         /// <param name="super">Superannuation Percentage of the Employee</param>
         /// <param name="payStartDate">Payment StartDate</param>
         /// <returns></returns>
-        public BO_PaySlip GeneratePay(string firstname, string surname, decimal annualsalary, decimal super, DateTime payStartDate)
+        public bool GeneratePay(string firstname, string surname, decimal annualsalary, decimal super, DateTime payStartDate)
         {
+            bool payGenerated = false;
+
             if (IsValidPayParameters(annualsalary,super))
             {
                 // 1) Get the employee Id from the database.
-                BO_Employee bo_Employee = new BO_Employee(firstname, surname, annualsalary);
+                BO_Employee bo_Employee = new BO_Employee(firstname, surname, annualsalary, super);
                 Employee employee = bo_Employee.GetEmployee(createauto: true);
 
+                if (employee == null)
+                {
+                    employee = bo_Employee.CreateEmployee();
+                }
                 // Super and annual salary may have changed in this case update.
 
                 // 2) Get the month year id from the database.
@@ -57,11 +71,18 @@ namespace MyobPayroll.BusinessRules
                 {
                     // 3) Create the Payslip.
                     this.CreatePaySlip(monthYear, employee, new BO_IncomeTax());
+                    payGenerated = true;
                 }
             }
-            return this;
-        } 
-        
+
+            return payGenerated;
+        }
+
+        internal List<PaySlip> GetLitOfPaySlips(List<int> payslipIds)
+        {
+            DataLayer.DL_Payslip dL_Payslip = new DataLayer.DL_Payslip();
+            return dL_Payslip.GetListOfPayslips(payslipIds);
+        }
 
         private bool IsValidPayParameters(decimal annualSalary, decimal super)
         {
